@@ -2,15 +2,17 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace maui_tutorial_app.ViewModel;
 
 public partial class MainViewModel : ObservableObject
 {
-
-    public MainViewModel()     
+    IConnectivity connectivity;
+    public MainViewModel(IConnectivity connectivity)     
     {
         Items = new ObservableCollection<string>();
+        this.connectivity = connectivity;
     }
 
     [ObservableProperty] 
@@ -20,10 +22,16 @@ public partial class MainViewModel : ObservableObject
     string text;
 
     [RelayCommand]
-    private void Add()
+    private async Task Add()
     {
-        if(string.IsNullOrWhiteSpace(Text))
+        if (string.IsNullOrWhiteSpace(Text))
             return;
+
+        if (connectivity.NetworkAccess != NetworkAccess.Internet)
+        {
+            await Shell.Current.DisplayAlertAsync("Error!", "No Internet", "OK");
+            return;
+        }
 
         text = text.Trim();
         Items.Add(text);
