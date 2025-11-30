@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="maui_tutorial_app.MainPage"
+             xmlns:viewModel="clr-namespace:maui_tutorial_app.ViewModel"
+             x:DataType="viewModel:MainViewModel"
+             x:Name="thisPage">
+
+    <Grid RowDefinitions="100, Auto, *"
+          ColumnDefinitions=".75*, .25*"
+          Padding="10"
+          RowSpacing="10"
+          ColumnSpacing="10">
+
+        <Label 
+            Text="Shopping List"
+            FontSize="30"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center"
+            Grid.ColumnSpan="2"/>
+        
+        <!--<Image Grid.ColumnSpan="2"
+               Source="dotnet_bot.png"
+               BackgroundColor="AliceBlue"/>-->
+
+        <Entry Placeholder="Enter task"
+               Text="{Binding Text}"
+               Grid.Row="1"/>
+
+        <Button Text="Add"
+                Command="{Binding AddCommand}"
+                Grid.Row="1"
+                Grid.Column="1"/>
+
+        <CollectionView Grid.Row="2" Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Items}"
+                        SelectionMode="None">
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type x:String}">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="Red"
+                                           Command="{Binding BindingContext.DeleteCommand, Source={x:Reference thisPage}}"
+                                           CommandParameter="{Binding .}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid Padding="0,5">
+                            <Border>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding BindingContext.TapCommand, Source={x:Reference thisPage}}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding .}"
+                                    FontSize="24"
+                                    Padding="15"/>
+                            </Border>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
